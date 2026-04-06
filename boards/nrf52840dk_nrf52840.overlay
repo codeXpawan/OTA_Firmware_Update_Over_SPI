@@ -1,0 +1,74 @@
+/*
+ * Sizes calculated as fractions of total flash.
+ * Edit only these defines to rescale for any board.
+ */
+#define FLASH_TOTAL  0x100000 /* 1 MiB */
+#define BOOT_SIZE     0xc000 
+#define App_LOC_0     c000   
+#define APP_LOC       82000  
+#define APP_SIZE      0x76000
+#define STORAGE_LOC  f8000
+#define STORAGE_SIZE 0x8000
+
+&flash0 {
+    partitions {
+        compatible = "fixed-partitions";
+        #address-cells = <1>;
+        #size-cells = <1>;
+
+
+        boot_partition: partition@0 {
+            label = "mcuboot";
+            reg = <0x0 BOOT_SIZE>;
+        };
+
+        slot0_partition: partition@App_LOC_0 {
+            label = "image-0";
+            reg = <BOOT_SIZE APP_SIZE>;
+        };
+
+        slot1_partition: partition@APP_LOC {
+            label = "image-1";
+            reg = <(BOOT_SIZE + APP_SIZE) APP_SIZE>;
+        };
+
+        storage_partition: partition@STORAGE_LOC {
+            label = "storage";
+            reg = <(BOOT_SIZE + APP_SIZE + APP_SIZE) STORAGE_SIZE>;
+        };
+    };
+};
+
+&pinctrl {
+    spis1_default: spis1_default {
+        group1 {
+            psels = <NRF_PSEL(SPIS_SCK,  0, 29)>,
+                    <NRF_PSEL(SPIS_MISO, 0, 02)>,
+                    <NRF_PSEL(SPIS_MOSI, 1, 15)>,
+                    <NRF_PSEL(SPIS_CSN,  1, 13)>;
+        };
+    };
+    spis1_sleep: spis1_sleep {
+        group1 {
+            psels = <NRF_PSEL(SPIS_SCK,  0, 29)>,
+                    <NRF_PSEL(SPIS_MISO, 0, 02)>,
+                    <NRF_PSEL(SPIS_MOSI, 1, 15)>,
+                    <NRF_PSEL(SPIS_CSN,  1, 13)>;
+            low-power-enable;
+        };
+    };
+};
+
+/*
+ * compatible = "nordic,nrf-spis" triggers DT_HAS_NORDIC_NRF_SPIS_ENABLED
+ * which auto-selects NRFX_SPIS via SPI_NRFX_SPIS - no manual Kconfig needed
+ * CSN pin is defined here in pinctrl, NOT via cs-gpios for SPIS
+ */
+&spi1 {
+    compatible = "nordic,nrf-spis";
+    status = "okay";
+    def-char = <0xFF>;
+    pinctrl-0 = <&spis1_default>;
+    pinctrl-1 = <&spis1_sleep>;
+    pinctrl-names = "default", "sleep";
+};

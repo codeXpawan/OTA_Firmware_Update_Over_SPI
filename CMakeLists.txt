@@ -4,3 +4,4 @@ find_package(Zephyr REQUIRED HINTS $ENV{ZEPHYR_BASE})
 project(nrf_spi)
 
 target_sources(app PRIVATE src/main.c)
+set(BOARD nrf52840dk CACHE STRING "")

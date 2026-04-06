@@ -1,0 +1,18 @@
+{
+  "cmake.configureArgs": [
+    "-DBOARD=nrf52840dk/nrf52840"
+  ],
+  "python.defaultInterpreterPath": "/home/pika/zephyrproject/.venv/bin/python",
+  "terminal.integrated.env.linux": {
+    "PATH": "/home/pika/zephyrproject/.venv/bin:${env:PATH}",
+    "VIRTUAL_ENV": "/home/pika/zephyrproject/.venv"
+  },
+  "cmake.environment": {
+    "PATH": "/home/pika/zephyrproject/.venv/bin:/usr/bin:/bin",
+    "VIRTUAL_ENV": "/home/pika/zephyrproject/.venv"
+  },
+  "C_Cpp.default.compileCommands": "${workspaceFolder}/build/compile_commands.json",
+  "C_Cpp.default.intelliSenseMode": "linux-gcc-arm",
+  "C_Cpp.intelliSenseEngine": "default",
+  "cmake.configureOnOpen": false
+}
